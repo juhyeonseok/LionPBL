@@ -1,6 +1,9 @@
 package class6.springbootconversion.service;
 
 import class6.springbootconversion.domain.Member;
+import class6.springbootconversion.domain.Lion;
+import class6.springbootconversion.domain.Staff;
+import class6.springbootconversion.dto.*;
 import class6.springbootconversion.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +43,107 @@ public class MemberService {
             );
         }
         repository.save(member);
+    }
+
+    /**
+     * DTO 데이터를 기반으로 Lion(아기사자) 객체를 생성하고 저장합니다.
+     * 
+     * @param request 아기사자 생성 요청 DTO
+     * @return 생성 성공 시 Lion 객체, 이름 중복 시 null
+     */
+    public Lion createLion(LionCreateRequest request) {
+        if (repository.existsByName(request.getName())) {
+            return null;
+        }
+        Lion lion = new Lion(
+            request.getName(),
+            request.getMajor(),
+            request.getGeneration(),
+            request.getPart(),
+            request.getStudentId()
+        );
+        repository.save(lion);
+        return lion;
+    }
+
+    /**
+     * DTO 데이터를 기반으로 Staff(운영진) 객체를 생성하고 저장합니다.
+     * 
+     * @param request 운영진 생성 요청 DTO
+     * @return 생성 성공 시 Staff 객체, 이름 중복 시 null
+     */
+    public Staff createStaff(StaffCreateRequest request) {
+        if (repository.existsByName(request.getName())) {
+            return null;
+        }
+        Staff staff = new Staff(
+            request.getName(),
+            request.getMajor(),
+            request.getGeneration(),
+            request.getPart(),
+            request.getPosition()
+        );
+        repository.save(staff);
+        return staff;
+    }
+
+    /**
+     * 이름으로 아기사자 정보를 찾아 수정합니다.
+     * 
+     * @param name 대상을 찾기 위한 회원 이름
+     * @param request 수정할 정보가 담긴 DTO
+     * @return 수정 성공 시 수정된 Lion 객체, 대상이 없거나 아기사자가 아니면 null
+     */
+    public Lion updateLion(String name, LionUpdateRequest request) {
+        Member member = repository.findByName(name);
+        if (!(member instanceof Lion)) {
+            return null;
+        }
+        Lion updatedLion = new Lion(
+            name, // 이름은 경로 변수로부터 수집되므로 기존 이름 고정
+            request.getMajor(),
+            request.getGeneration(),
+            request.getPart(),
+            request.getStudentId()
+        );
+        repository.updateByName(name, updatedLion);
+        return updatedLion;
+    }
+
+    /**
+     * 이름으로 운영진 정보를 찾아 수정합니다.
+     * 
+     * @param name 대상을 찾기 위한 회원 이름
+     * @param request 수정할 정보가 담긴 DTO
+     * @return 수정 성공 시 수정된 Staff 객체, 대상이 없거나 운영진이 아니면 null
+     */
+    public Staff updateStaff(String name, StaffUpdateRequest request) {
+        Member member = repository.findByName(name);
+        if (!(member instanceof Staff)) {
+            return null;
+        }
+        Staff updatedStaff = new Staff(
+            name, // 이름은 경로 변수로부터 수집되므로 기존 이름 고정
+            request.getMajor(),
+            request.getGeneration(),
+            request.getPart(),
+            request.getPosition()
+        );
+        repository.updateByName(name, updatedStaff);
+        return updatedStaff;
+    }
+
+    /**
+     * 이름으로 회원을 삭제합니다.
+     * 
+     * @param name 삭제할 회원의 이름
+     * @return 삭제 성공 시 true, 대상 회원이 없으면 false
+     */
+    public boolean deleteMember(String name) {
+        if (!repository.existsByName(name)) {
+            return false;
+        }
+        return repository.deleteByName(name);
     }
 
     public Member findMember(String name) {

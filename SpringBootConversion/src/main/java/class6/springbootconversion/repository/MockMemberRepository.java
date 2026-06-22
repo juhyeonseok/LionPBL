@@ -59,4 +59,20 @@ public class MockMemberRepository implements MemberRepository {
         }
         return false;
     }
+
+    @Override
+    public void updateByName(String name, Member member) {
+        for (int i = 0; i < dummyMembers.size(); i++) {
+            if (dummyMembers.get(i).getName().equals(name)) {
+                member.setId(dummyMembers.get(i).getId());
+                dummyMembers.set(i, member);
+                break;
+            }
+        }
+    }
+
+    @Override
+    public boolean deleteByName(String name) {
+        return dummyMembers.removeIf(m -> m.getName().equals(name));
+    }
 }

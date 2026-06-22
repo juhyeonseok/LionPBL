@@ -60,4 +60,23 @@ public class MemoryMemberRepository implements MemberRepository {
         }
         return false;
     }
+
+    @Override
+    public void updateByName(String name, Member member) {
+        // 리스트를 순회하는 개념처럼 맵의 엔트리셋을 순회하며 이름이 일치하는 대상을 찾아 교체합니다.
+        for (Map.Entry<Long, Member> entry : store.entrySet()) {
+            if (entry.getValue().getName().equals(name)) {
+                // 기존 객체의 고유 ID를 새 객체에 할당하여 식별자 일관성을 유지합니다.
+                member.setId(entry.getKey());
+                store.put(entry.getKey(), member);
+                break;
+            }
+        }
+    }
+
+    @Override
+    public boolean deleteByName(String name) {
+        // removeIf를 사용하여 컬렉션 내에서 이름이 일치하는 회원을 간결하게 제거하고, 삭제 성공 여부를 반환합니다.
+        return store.values().removeIf(m -> m.getName().equals(name));
+    }
 }

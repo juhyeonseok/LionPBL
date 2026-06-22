@@ -28,4 +28,20 @@ public interface MemberRepository {
      * 해당 이름을 가진 회원이 저장소에 존재하는지 여부를 확인합니다.
      */
     boolean existsByName(String name);
+
+    /**
+     * 이름으로 기존 멤버를 찾아 새 멤버 데이터로 교체합니다.
+     * 
+     * @param name 교체할 대상 회원의 기존 이름
+     * @param member 새롭게 교체될 회원 정보
+     */
+    void updateByName(String name, Member member);
+
+    /**
+     * 이름으로 회원을 제거합니다.
+     * 
+     * @param name 제거할 회원의 이름
+     * @return 삭제에 성공하면 true, 삭제할 회원이 없었거나 실패하면 false
+     */
+    boolean deleteByName(String name);
 }
