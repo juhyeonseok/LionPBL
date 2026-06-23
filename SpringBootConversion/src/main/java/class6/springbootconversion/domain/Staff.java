@@ -1,15 +1,29 @@
 package class6.springbootconversion.domain;
 
 import class6.springbootconversion.domain.policy.StaffSubmissionPolicy;
+import jakarta.persistence.Entity;
+import jakarta.persistence.DiscriminatorValue;
 
 /**
- * 운영진(Staff) 멤버를 나타내는 클래스입니다.
- * Member를 상속받으며, 직책(roleTitle) 및 회의실 대여 권한(hasMeetingRoomAuthority) 정보를 가집니다.
- * 운영진 전용 제출 정책(StaffSubmissionPolicy)을 사용합니다.
+ * 운영진(Staff) 멤버를 나타내는 JPA 엔티티 클래스입니다.
+ * 
+ * `@Entity`: 부모인 Member 테이블에 통합 매핑될 하위 엔티티로 등록합니다.
+ * `@DiscriminatorValue("STAFF")`: 단일 테이블 전략 하에서 dtype 컬럼에 저장될 값을 "STAFF"으로 설정합니다.
  */
+@Entity
+@DiscriminatorValue("STAFF")
 public class Staff extends Member {
-    private final String roleTitle; // 운영진만의 고유 정보: 직책 (예: 회장, 교육팀장 등)
-    private final boolean hasMeetingRoomAuthority; // 회의실 대여 권한 여부
+
+    // JPA 리플렉션을 위해 final 키워드를 제거합니다.
+    private String roleTitle;
+    private boolean hasMeetingRoomAuthority;
+
+    /**
+     * JPA 스펙 준수를 위한 protected 기본 생성자
+     */
+    protected Staff() {
+        super();
+    }
 
     public Staff(String name, String major, int generation, String part, String roleTitle) {
         // 부모 생성자 호출 시, 운영진 역할(Role.STAFF)과 운영진 과제 제출 정책을 주입합니다.
@@ -22,8 +36,16 @@ public class Staff extends Member {
         return roleTitle;
     }
 
+    public void setRoleTitle(String roleTitle) {
+        this.roleTitle = roleTitle;
+    }
+
     public boolean hasMeetingRoomAuthority() {
         return hasMeetingRoomAuthority;
+    }
+
+    public void setHasMeetingRoomAuthority(boolean hasMeetingRoomAuthority) {
+        this.hasMeetingRoomAuthority = hasMeetingRoomAuthority;
     }
 
     @Override

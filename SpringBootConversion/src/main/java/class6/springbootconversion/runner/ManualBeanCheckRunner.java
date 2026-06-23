@@ -39,7 +39,7 @@ public class ManualBeanCheckRunner implements CommandLineRunner {
             manualService.join(testLion);
             System.out.println("👉 수동 빈 서비스를 통한 테스트 회원 등록 완료: " + testLion.getName());
 
-            Member findLion = manualService.findMember("테스트사자");
+            Member findLion = manualService.findMember(testLion.getId());
             System.out.println("👉 수동 빈 서비스를 통한 테스트 회원 조회 성공!");
             System.out.println("📋 조회 결과 요약: " + findLion.getSummaryString());
 

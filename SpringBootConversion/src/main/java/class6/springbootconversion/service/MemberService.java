@@ -88,68 +88,71 @@ public class MemberService {
     }
 
     /**
-     * 이름으로 아기사자 정보를 찾아 수정합니다.
+     * ID로 아기사자 정보를 찾아 수정합니다.
      * 
-     * @param name 대상을 찾기 위한 회원 이름
+     * @param id 대상을 찾기 위한 회원의 ID
      * @param request 수정할 정보가 담긴 DTO
      * @return 수정 성공 시 수정된 Lion 객체, 대상이 없거나 아기사자가 아니면 null
      */
-    public Lion updateLion(String name, LionUpdateRequest request) {
-        Member member = repository.findByName(name);
+    public Lion updateLion(Long id, LionUpdateRequest request) {
+        Member member = repository.findById(id);
         if (!(member instanceof Lion)) {
             return null;
         }
         Lion updatedLion = new Lion(
-            name, // 이름은 경로 변수로부터 수집되므로 기존 이름 고정
+            member.getName(), // 이름은 변경 불가능하므로 기존 멤버의 이름 유지
             request.getMajor(),
             request.getGeneration(),
             request.getPart(),
             request.getStudentId()
         );
-        repository.updateByName(name, updatedLion);
+        repository.updateById(id, updatedLion);
         return updatedLion;
     }
 
     /**
-     * 이름으로 운영진 정보를 찾아 수정합니다.
+     * ID로 운영진 정보를 찾아 수정합니다.
      * 
-     * @param name 대상을 찾기 위한 회원 이름
+     * @param id 대상을 찾기 위한 회원의 ID
      * @param request 수정할 정보가 담긴 DTO
      * @return 수정 성공 시 수정된 Staff 객체, 대상이 없거나 운영진이 아니면 null
      */
-    public Staff updateStaff(String name, StaffUpdateRequest request) {
-        Member member = repository.findByName(name);
+    public Staff updateStaff(Long id, StaffUpdateRequest request) {
+        Member member = repository.findById(id);
         if (!(member instanceof Staff)) {
             return null;
         }
         Staff updatedStaff = new Staff(
-            name, // 이름은 경로 변수로부터 수집되므로 기존 이름 고정
+            member.getName(), // 이름은 변경 불가능하므로 기존 멤버의 이름 유지
             request.getMajor(),
             request.getGeneration(),
             request.getPart(),
             request.getPosition()
         );
-        repository.updateByName(name, updatedStaff);
+        repository.updateById(id, updatedStaff);
         return updatedStaff;
     }
 
     /**
-     * 이름으로 회원을 삭제합니다.
+     * ID로 회원을 삭제합니다.
      * 
-     * @param name 삭제할 회원의 이름
+     * @param id 삭제할 회원의 ID
      * @return 삭제 성공 시 true, 대상 회원이 없으면 false
      */
-    public boolean deleteMember(String name) {
-        if (!repository.existsByName(name)) {
-            return false;
-        }
-        return repository.deleteByName(name);
+    public boolean deleteMember(Long id) {
+        return repository.deleteById(id);
     }
 
-    public Member findMember(String name) {
-        return repository.findByName(name);
+    /**
+     * ID로 특정 회원을 조회합니다.
+     */
+    public Member findMember(Long id) {
+        return repository.findById(id);
     }
 
+    /**
+     * 저장된 모든 회원 목록을 조회합니다.
+     */
     public List<Member> findAllMembers() {
         return repository.findAll();
     }

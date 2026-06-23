@@ -15,6 +15,11 @@ public interface MemberRepository {
     void save(Member member);
 
     /**
+     * 회원 ID를 기준으로 회원을 찾아 반환합니다.
+     */
+    Member findById(Long id);
+
+    /**
      * 회원 이름을 기준으로 저장소에서 회원을 찾아 반환합니다.
      */
     Member findByName(String name);
@@ -30,18 +35,18 @@ public interface MemberRepository {
     boolean existsByName(String name);
 
     /**
-     * 이름으로 기존 멤버를 찾아 새 멤버 데이터로 교체합니다.
+     * ID로 기존 멤버를 찾아 새 멤버 데이터로 교체합니다.
      * 
-     * @param name 교체할 대상 회원의 기존 이름
+     * @param id 교체할 대상 회원의 고유 ID
      * @param member 새롭게 교체될 회원 정보
      */
-    void updateByName(String name, Member member);
+    void updateById(Long id, Member member);
 
     /**
-     * 이름으로 회원을 제거합니다.
+     * ID로 회원을 제거합니다.
      * 
-     * @param name 제거할 회원의 이름
+     * @param id 제거할 회원의 고유 ID
      * @return 삭제에 성공하면 true, 삭제할 회원이 없었거나 실패하면 false
      */
-    boolean deleteByName(String name);
+    boolean deleteById(Long id);
 }
