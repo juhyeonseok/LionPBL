@@ -42,6 +42,16 @@ public abstract class Member {
     private Role role;
 
     /**
+     * `@OneToMany`: 일대다 연관관계를 선언합니다.
+     * mappedBy = "member": 연관관계의 주인이 자식인 Assignment 엔티티의 member 필드임을 나타냅니다.
+     * cascade = CascadeType.ALL: 부모 객체의 영속성 상태 변화(생성, 수정, 삭제)를 자식 객체에 전이시킵니다.
+     * orphanRemoval = true: 부모 객체인 Member의 assignments 리스트에서 자식 객체를 제거하면, 
+     *                       DB 상에서도 해당 자식 데이터가 자동으로 DELETE 되도록 고아 객체 제거를 활성화합니다.
+     */
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private java.util.List<Assignment> assignments = new java.util.ArrayList<>();
+
+    /**
      * `@Transient`: 이 필드는 데이터베이스 테이블의 컬럼과 매핑하지 않고 제외시킵니다.
      * 자바 프로그램 실행 중에 정책 비즈니스 룰을 판별하기 위한 비영속 상태 필드입니다.
      */
@@ -136,6 +146,21 @@ public abstract class Member {
             initPolicy();
         }
         return submissionPolicy != null && submissionPolicy.isEligible();
+    }
+
+    public java.util.List<Assignment> getAssignments() {
+        return assignments;
+    }
+
+    /**
+     * 양방향 연관관계를 맺기 위한 연관관계 편의 메서드입니다.
+     * 한 번에 부모의 컬렉션에 추가하고 자식의 외래 키 객체 참조를 함께 맞춰줍니다.
+     */
+    public void addAssignment(Assignment assignment) {
+        this.assignments.add(assignment);
+        if (assignment.getMember() != this) {
+            assignment.setMember(this);
+        }
     }
 
     public abstract String getDetailString();
